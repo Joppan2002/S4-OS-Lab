@@ -1,0 +1,23 @@
+#!/bin/bash
+echo "Enter the text: "
+read text
+text_no_spaces=$(echo "$text" | tr -d ' ')
+word_count=$(echo "$text" | wc -w)
+vowel_count=0
+consonant_count=0
+special_char_count=0
+for (( i=0; i<${#text_no_spaces}; i++ ))
+do
+  char=${text_no_spaces:$i:1}
+  if [[ $char =~ [aeiouAEIOU] ]]; then
+    vowel_count=$((vowel_count + 1))
+  elif [[ $char =~ [[:alpha:]] ]]; then
+    consonant_count=$((consonant_count + 1))
+  else
+    special_char_count=$((special_char_count + 1))
+  fi
+done
+echo "Number of words: $word_count"
+echo "Number of vowels: $vowel_count"
+echo "Number of consonants: $consonant_count"
+echo "Number of special characters: $special_char_count"
