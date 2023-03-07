@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "Enter a set of numbers (separated by spaces): "
+read -a numbers
+echo "Enter the number to search for: "
+read target_number
+count=0
+for number in "${numbers[@]}"
+do
+  if [ $number -eq $target_number ]; then
+    count=$((count + 1))
+  fi
+done
+echo "The number of occurrences of $target_number is: $count"
