@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
+
+int main(int argc, char *argv[]) {
+    DIR *dir;
+    struct dirent *dp;
+    struct stat statbuf;
+
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <directory>\n", argv[0]);
+        exit(1);
+    }
+
+    if ((dir = opendir(argv[1])) == NULL) {
+        fprintf(stderr, "Cannot open directory '%s'\n", argv[1]);
+        exit(1);
+    }
+
+    while ((dp = readdir(dir)) != NULL) {
+        if (stat(dp->d_name, &statbuf) == -1) {
+            fprintf(stderr, "Cannot get stat for file '%s'\n", dp->d_name);
+            continue;
+        }
+
+        printf("%s - %ld bytes\n", dp->d_name, statbuf.st_size);
+    }
+
+    closedir(dir);
+    exit(0);
+}
+
+
+
+
+
+
+This program first checks if the correct number of arguments (i.e., the directory name) has been provided. It then opens the directory using opendir(). If opendir() returns NULL, it means the directory could not be opened, and the program exits.
+
+The program then uses readdir() to read each entry in the directory, and stat() to get information about each file (e.g., size, owner, permissions). If stat() fails for any file, the program skips to the next file. Finally, the program prints the name and size of each file.
+
+After all the files have been read, the program closes the directory using closedir() and exits.
+
+Note that this is just an example program and there are many different ways to use these system calls in Linux.
