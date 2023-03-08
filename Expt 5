@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 10
+#define SHM_KEY 1234
+
+typedef struct {
+    int buffer[BUFFER_SIZE];
+    int index;
+} shared_data;
+
+int main() {
+    int shm_id, i;
+    pid_t pid;
+    shared_data *shm_data;
+
+    // Create shared memory segment
+    shm_id = shmget(SHM_KEY, sizeof(shared_data), IPC_CREAT | 0666);
+    if (shm_id < 0) {
+        perror("shmget");
+        exit(1);
+    }
+
+    // Attach shared memory segment
+    shm_data = shmat(shm_id, NULL, 0);
+    if (shm_data == (shared_data *) -1) {
+        perror("shmat");
+        exit(1);
+    }
+
+    // Initialize shared memory buffer
+    shm_data->index = 0;
+
+    // Fork a child process
+    pid = fork();
+    if (pid < 0) {
+        perror("fork");
+        exit(1);
+    } else if (pid == 0) {
+        // Child process (producer)
+        for (i = 0; i < BUFFER_SIZE; i++) {
+            // Wait for buffer space
+            while (shm_data->index == BUFFER_SIZE);
+            // Add data to buffer
+            shm_data->buffer[shm_data->index] = i;
+            shm_data->index++;
+        }
+    } else {
+        // Parent process (consumer)
+        for (i = 0; i < BUFFER_SIZE; i++) {
+            // Wait for data in buffer
+            while (shm_data->index == 0);
+            // Read data from buffer
+            printf("Consumer got: %d\n", shm_data->buffer[shm_data->index - 1]);
+            shm_data->index--;
+        }
+        // Wait for child process to finish
+        wait(NULL);
+        // Detach shared memory segment
+        shmdt(shm_data);
+        // Delete shared memory segment
+        shmctl(shm_id, IPC_RMID, NULL);
+    }
+
+    return 0;
+}
