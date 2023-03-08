@@ -27,3 +27,16 @@ int main() {
     }
     exit(0);
 }
+
+
+
+
+
+
+This program first calls fork() to create a new process. If fork() returns a negative value, it means the creation of a new process has failed. If it returns 0, it means the code is being executed by the child process, and if it returns a positive value, it means the code is being executed by the parent process.
+
+In the child process, we use getpid() to get the process ID of the child, and then we call execvp() to execute the ls command with the arguments -l.
+
+In the parent process, we use getpid() to get the process ID of the parent, and then we call wait() to wait for the child process to complete. We also use exit() to terminate the program once the child process has completed.
+
+Note that this is just an example program and there are many different ways to use these system calls in Linux.
