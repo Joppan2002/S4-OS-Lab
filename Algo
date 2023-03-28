@@ -1,0 +1,103 @@
+5.	Implement Producer-Consumer Problem using shared memory.
+
+
+Algorithm for the given code:
+
+Declare and initialize global variables:
+a. int mutex = 1;
+b. int full = 0;
+c. int empty = 10;
+d. int x = 0;
+Define a function named "producer" with no input parameter and void return type:
+a. Decrement mutex.
+b. Increment full.
+c. Decrement empty.
+d. Increment x.
+e. Print "Producer produces item x", where x is the value of x.
+f. Increment mutex.
+Define a function named "consumer" with no input parameter and void return type:
+a. Decrement mutex.
+b. Decrement full.
+c. Increment empty.
+d. Print "Consumer consumes item x", where x is the value of x.
+e. Decrement x.
+f. Increment mutex.
+Define the main function with the following steps:
+a. Declare local variables n and i.
+b. Print the following options to the user:
+i. Press 1 for Producer
+ii. Press 2 for Consumer
+iii. Press 3 for Exit
+c. Start an infinite loop using for loop, where i is initialized to 1 and incremented by 1 in each iteration:
+i. Print "Enter your choice:"
+ii. Read the value of n from the user.
+iii. Use a switch statement to check the value of n:
+a. If n is equal to 1:
+i. Check if mutex is equal to 1 and empty is not equal to 0. If true, call the producer function.
+ii. Otherwise, print "Buffer is full!".
+b. If n is equal to 2:
+i. Check if mutex is equal to 1 and full is not equal to 0. If true, call the consumer function.
+ii. Otherwise, print "Buffer is empty!".
+c. If n is equal to 3, call the exit() function to terminate the program.
+End the program.
+
+
+
+6.	Implement the following CPU scheduling algorithms
+a)FCFS b)SJF   c)Non Preemptive Priority d)Round Robin Scheduling(TQ=3s)  
+
+
+
+FCFS (First-Come-First-Serve) Scheduling Algorithm:
+a. Sort the processes by their arrival time.
+b. For the first process, set its waiting time to 0 and its turnaround time to its burst time.
+c. For all subsequent processes, set their waiting time to the sum of the turnaround time of the previous process and the difference between their arrival time and the current time.
+d. Set their turnaround time to the sum of their waiting time and burst time.
+e. Calculate the average waiting time and average turnaround time for all processes.
+f. Print the process ID, burst time, arrival time, waiting time, and turnaround time for each process.
+g. Print the average waiting time and average turnaround time.
+
+SJF (Shortest-Job-First) Scheduling Algorithm:
+a. Sort the processes by their burst time.
+b. For the first process, set its waiting time to 0 and its turnaround time to its burst time.
+c. For all subsequent processes, set their waiting time to the difference between the current time and their arrival time.
+d. Set their turnaround time to the sum of their waiting time and burst time.
+e. Calculate the average waiting time and average turnaround time for all processes.
+f. Print the process ID, burst time, arrival time, waiting time, and turnaround time for each process.
+g. Print the average waiting time and average turnaround time.
+
+Non-Preemptive Priority Scheduling Algorithm:
+a. Sort the processes by their priority.
+b. For the first process, set its waiting time to 0 and its turnaround time to its burst time.
+c. For all subsequent processes, set their waiting time to the difference between the current time and their arrival time.
+d. Set their turnaround time to the sum of their waiting time and burst time.
+e. Calculate the average waiting time and average turnaround time for all processes.
+f. Print the process ID, burst time, arrival time, waiting time, and turnaround time for each process.
+g. Print the average waiting time and average turnaround time.
+
+Round Robin Scheduling Algorithm:
+a. Initialize a time quantum (time slice) value.
+b. Initialize a current time value to 0.
+c. While there are remaining processes:
+i. For each process, if the remaining time is 0, skip to the next process.
+ii. If the remaining time is less than or equal to the time quantum, add it to the current time and update the waiting and turnaround time for the process.
+iii. Otherwise, subtract the time quantum from the remaining time and add the time quantum to the current time.
+iv. Rotate to the next process and repeat.
+d. Calculate the average waiting time and average turnaround time for all processes.
+e. Print the process ID, burst time, arrival time, waiting time, and turnaround time for each process.
+f. Print the average waiting time and average turnaround time
+
+
+
+
+Input the total number of processes and their burst times.
+Set the quantum time slice (time quantum) for each process.
+Initialize a queue to hold the processes.
+Initialize the current time to zero and the total waiting time and turnaround time for each process to zero.
+Enqueue all the processes into the queue.
+While the queue is not empty, do the following:
+a. Dequeue the first process from the queue.
+b. If the process has a remaining burst time greater than the quantum time slice, then subtract the quantum time slice from its remaining burst time and add the quantum time slice to the current time.
+c. If the process has a remaining burst time less than or equal to the quantum time slice, then add its remaining burst time to the current time, and calculate its waiting time and turnaround time by subtracting its arrival time from the current time.
+d. Enqueue the process back into the queue.
+Calculate the average waiting time and average turnaround time for all processes.
