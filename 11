@@ -1,0 +1,166 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_FILES 100
+#define MAX_BLOCKS 100
+
+typedef struct {
+    int start_block;
+    int num_blocks;
+} File;
+
+void sequentialAllocation(File files[], int num_files, int blocks[], int num_blocks) {
+    int i, j, k;
+    int curr_block = 0;
+    int flag = 0;
+
+    printf("Sequential File Allocation\n");
+
+    for (i = 0; i < num_files; i++) {
+        int start_block = curr_block;
+
+        for (j = curr_block; j < num_blocks; j++) {
+            if (blocks[j] == 0) {
+                blocks[j] = 1;
+                curr_block = j + 1;
+                flag = 1;
+                files[i].start_block = start_block;
+                break;
+            }
+        }
+
+        if (flag == 0) {
+            printf("File allocation failed for file %d\n", i + 1);
+            break;
+        }
+
+        for (k = j; k < num_blocks; k++) {
+            if (blocks[k] == 1) {
+                files[i].num_blocks++;
+            } else {
+                break;
+            }
+        }
+
+        printf("File %d allocated from block %d to %d\n", i + 1, files[i].start_block, files[i].start_block + files[i].num_blocks - 1);
+        flag = 0;
+    }
+
+    printf("\n");
+}
+
+void indexedAllocation(File files[], int num_files, int blocks[], int num_blocks) {
+    int i, j;
+    int index_block = -1;
+
+    printf("Indexed File Allocation\n");
+
+    for (i = 0; i < num_files; i++) {
+        int start_block = -1;
+        int num_allocated = 0;
+
+        for (j = 0; j < num_blocks; j++) {
+            if (blocks[j] == 0) {
+                blocks[j] = 1;
+                num_allocated++;
+
+                if (start_block == -1) {
+                    start_block = j;
+                }
+
+                if (num_allocated == 1) {
+                    index_block = j;
+                }
+
+                if (num_allocated == 10) {
+                    break;
+                }
+            }
+        }
+
+        if (num_allocated != 10) {
+            printf("File allocation failed for file %d\n", i + 1);
+            break;
+        }
+
+        files[i].start_block = index_block;
+        files[i].num_blocks = num_allocated;
+
+        printf("File %d allocated from block %d (Index block) to %d\n", i + 1, files[i].start_block, files[i].start_block + files[i].num_blocks - 1);
+    }
+
+    printf("\n");
+}
+
+void linkedAllocation(File files[], int num_files, int blocks[], int num_blocks) {
+    int i, j, k;
+    int curr_block = 0;
+    int flag = 0;
+
+    printf("Linked File Allocation\n");
+
+    for (i = 0; i < num_files; i++) {
+        int start_block = -1;
+
+        for (j = curr_block; j < num_blocks; j++) {
+            if (blocks[j] == 0) {
+                blocks[j] = 1;
+                curr_block = j + 1;
+                flag = 1;
+
+                if (start_block == -1) {
+                    start_block = j;
+                    files[i].start_block = j;
+                    files[i].num_blocks = 1;
+                } else {
+                    blocks[start_block] = j;
+                    start_block = j;
+                    files[i].num_blocks++;
+                }
+            }
+        }
+
+        if (flag == 0) {
+            printf("File allocation failed for file %d\n", i + 1);
+            break;
+        }
+
+        printf("File %d allocated starting from block %d\n", i + 1, files[i].start_block);
+
+        flag = 0;
+    }
+
+    printf("\n");
+}
+
+int main() {
+    File files[MAX_FILES];
+    int blocks[MAX_BLOCKS];
+    int num_files, num_blocks, i;
+
+    printf("Enter the number of blocks: ");
+    scanf("%d", &num_blocks);
+
+    printf("Enter the number of files: ");
+    scanf("%d", &num_files);
+
+    for (i = 0; i < num_blocks; i++) {
+        blocks[i] = 0;
+    }
+
+    sequentialAllocation(files, num_files, blocks, num_blocks);
+
+    for (i = 0; i < num_blocks; i++) {
+        blocks[i] = 0;
+    }
+
+    indexedAllocation(files, num_files, blocks, num_blocks);
+
+    for (i = 0; i < num_blocks; i++) {
+        blocks[i] = 0;
+    }
+
+    linkedAllocation(files, num_files, blocks, num_blocks);
+
+    return 0;
+}
